@@ -1,0 +1,108 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:orientation="horizontal"
+    tools:context=".MainActivity"
+    >
+
+    <LinearLayout
+        android:id="@+id/actionbar"
+        android:layout_width="?android:actionBarSize"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical"
+        >
+
+        <ImageButton
+            android:id="@+id/action_back"
+            style="@style/ActionButton"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_ab_back"
+            />
+
+        <ImageButton
+            android:id="@+id/action_redo"
+            style="@style/ActionButton"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_ab_redo"
+            />
+
+        <ImageButton
+            android:id="@+id/action_undo"
+            style="@style/ActionButton"
+            android:layout_toStartOf="@id/action_redo"
+            android:src="@drawable/ic_ab_undo"
+            />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="@dimen/tb_size"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="@dimen/tb_size"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <ImageButton
+                android:id="@+id/action_select_bg"
+                style="@style/ToolButton"
+                android:src="@drawable/ic_tb_select_bg"
+                />
+
+            <ImageButton
+                android:id="@+id/action_select_stickers"
+                style="@style/ToolButton"
+                android:src="@drawable/ic_tb_select_friends"
+                />
+
+            <ImageButton
+                android:id="@+id/action_select_tools"
+                style="@style/ToolButton"
+                android:src="@drawable/ic_tb_select_tools"
+                />
+
+            <ImageButton
+                android:id="@+id/action_paint_crayon"
+                style="@style/ToolButton"
+                android:src="@drawable/ic_tb_crayon"
+                />
+
+            <ImageButton
+                android:id="@+id/action_paint_pencil"
+                style="@style/ToolButton"
+                android:src="@drawable/ic_tb_pencil"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        >
+
+        <ImageView
+            android:id="@+id/canvas_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="#FFF"
+            />
+
+        <ImageView
+            android:id="@+id/tool_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="matrix"
+            android:src="@drawable/friends_sticker"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+    </FrameLayout>
+
+</LinearLayout>

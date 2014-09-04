@@ -1,0 +1,16 @@
+<resources>
+
+    <color name="popup_btn_pressed">#44000000</color>
+    <color name="popup_btn_normal">#FFFFFFFF</color>
+
+    <color name="tool_btn_pressed">#44000000</color>
+    <color name="tool_btn_selected_stroke">#009</color>
+    <color name="tool_btn_selected_solid">@android:color/transparent</color>
+    <color name="tool_btn_normal">@android:color/transparent</color>
+
+    <color name="pink">#ed008c</color>
+    <color name="blue">#00bff3</color>
+    <color name="green">#8ec63f</color>
+    <color name="purple">#855fa8</color>
+
+</resources>

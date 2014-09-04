@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="ab_btn_size">48dp</dimen>
+    <dimen name="tb_size">80dp</dimen>
+
+    <dimen name="canvas_size">300dp</dimen>
+    <dimen name="popup_size">100dp</dimen>
+    <dimen name="popup_btn_size">80dp</dimen>
+    <dimen name="tool_size">100dp</dimen>
+
+    <dimen name="tool_btn_selected_corners">10dp</dimen>
+
+    <dimen name="point_size">5dp</dimen>
+    <dimen name="line_width">3dp</dimen>
+
+</resources>
