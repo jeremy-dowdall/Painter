@@ -4,6 +4,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 import static android.view.View.OnTouchListener;
 import static me.licious.painter.Painting.Command.Line;
 import static me.licious.painter.Painting.Command.Point;
@@ -14,7 +16,7 @@ public class PencilGestureDetector extends GestureDetector.SimpleOnGestureListen
     private final GestureDetector detector;
     private final boolean erase;
 
-    private float lastX, lastY;
+    private Line line;
 
     public PencilGestureDetector(ActionHandler handler, View canvasView) {
         this(handler, canvasView, false);
@@ -33,19 +35,16 @@ public class PencilGestureDetector extends GestureDetector.SimpleOnGestureListen
 
     @Override
     public boolean onDown(MotionEvent e) {
-        lastX = e.getX();
-        lastY = e.getY();
+        line = new Line();
+        line.points = new ArrayList<Line.Point>();
+        line.points.add(point(e));
+        line.erase = erase;
         return true;
     }
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        Line line = new Line();
-        line.x1 = lastX;
-        line.y1 = lastY;
-        line.x2 = lastX = e2.getX();
-        line.y2 = lastY = e2.getY();
-        line.erase = erase;
+        line.points.add(point(e2));
         handler.onAction(R.id.action_paint_apply, line);
         return true;
     }
@@ -59,4 +58,12 @@ public class PencilGestureDetector extends GestureDetector.SimpleOnGestureListen
         handler.onAction(R.id.action_paint_apply, point);
         return true;
     }
+
+    private Line.Point point(MotionEvent e) {
+        Line.Point point = new Line.Point();
+        point.x = e.getX();
+        point.y = e.getY();
+        return point;
+    }
+
 }

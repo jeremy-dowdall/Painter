@@ -61,12 +61,23 @@ public class Painting implements View.OnLayoutChangeListener {
     }
 
 
-    public void add(Command cmd) {
+    public void apply(Command cmd) {
         if(pos < commands.size()) {
             commands.subList(pos, commands.size()).clear();
         }
-        commands.add(cmd);
-        apply(commands.size() - 1, commands.size());
+        if(pos > 0 && cmd == commands.get(pos - 1)) {
+            // apply existing command (currently only Line)
+            Canvas canvas = new Canvas(bm);
+            Line line = (Line) cmd;
+            Line.Point p1 = line.points.get(line.points.size() - 2);
+            Line.Point p2 = line.points.get(line.points.size() - 1);
+            canvas.drawLine(p1.x, p1.y, p2.x, p2.y, line.erase ? eraseLinePaint : drawLinePaint);
+            view.postInvalidate();
+        } else {
+            // apply new command
+            commands.add(cmd);
+            apply(commands.size() - 1, commands.size());
+        }
     }
 
     private void apply(int start, int end) {
@@ -90,7 +101,12 @@ public class Painting implements View.OnLayoutChangeListener {
             }
             if(cmd instanceof Line) {
                 Line line = (Line) cmd;
-                canvas.drawLine(line.x1, line.y1, line.x2, line.y2, line.erase ? eraseLinePaint : drawLinePaint);
+                Line.Point p1 = line.points.get(0);
+                for(int i = 1; i < line.points.size(); i++) {
+                    Line.Point p2 = line.points.get(i);
+                    canvas.drawLine(p1.x, p1.y, p2.x, p2.y, line.erase ? eraseLinePaint : drawLinePaint);
+                    p1 = p2;
+                }
             }
         }
         view.postInvalidate();
@@ -144,8 +160,11 @@ public class Painting implements View.OnLayoutChangeListener {
             public boolean erase;
         }
         public static class Line implements Command {
-            public float x1, y1, x2, y2;
+            public List<Point> points;
             public boolean erase;
+            public static class Point {
+                public float x, y;
+            }
         }
     }
 

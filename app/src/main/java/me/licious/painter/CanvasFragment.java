@@ -69,7 +69,7 @@ public class CanvasFragment extends Fragment implements ActionHandler {
 
     private void add(Object data) {
         if(data instanceof Command) {
-            painting.add((Command) data);
+            painting.apply((Command) data);
         } else {
             Log.wtf("painter", "cannot apply: " + data);
         }
