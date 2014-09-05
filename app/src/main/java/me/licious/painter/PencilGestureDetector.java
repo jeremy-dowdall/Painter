@@ -12,12 +12,17 @@ public class PencilGestureDetector extends GestureDetector.SimpleOnGestureListen
 
     private final ActionHandler handler;
     private final GestureDetector detector;
+    private final boolean erase;
 
     private float lastX, lastY;
 
     public PencilGestureDetector(ActionHandler handler, View canvasView) {
+        this(handler, canvasView, false);
+    }
+    public PencilGestureDetector(ActionHandler handler, View canvasView, boolean erase) {
         this.handler = handler;
-        detector = new GestureDetector(canvasView.getContext(), this);
+        this.detector = new GestureDetector(canvasView.getContext(), this);
+        this.erase = erase;
     }
 
     @Override
@@ -40,6 +45,7 @@ public class PencilGestureDetector extends GestureDetector.SimpleOnGestureListen
         line.y1 = lastY;
         line.x2 = lastX = e2.getX();
         line.y2 = lastY = e2.getY();
+        line.erase = erase;
         handler.onAction(R.id.action_paint_apply, line);
         return true;
     }
@@ -49,6 +55,7 @@ public class PencilGestureDetector extends GestureDetector.SimpleOnGestureListen
         Point point = new Point();
         point.x = e.getX();
         point.y = e.getY();
+        point.erase = erase;
         handler.onAction(R.id.action_paint_apply, point);
         return true;
     }

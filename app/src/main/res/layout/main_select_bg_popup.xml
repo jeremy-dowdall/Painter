@@ -34,6 +34,12 @@
             style="@style/PopupButton"
             android:src="@color/purple"
             />
+        <ImageButton
+            android:id="@+id/action_set_bg_pattern"
+            style="@style/PopupButton"
+            android:src="@drawable/pattern"
+            android:scaleType="centerCrop"
+            />
     </LinearLayout>
 
 </HorizontalScrollView>

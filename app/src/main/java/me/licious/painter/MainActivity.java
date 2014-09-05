@@ -14,6 +14,7 @@ public class MainActivity extends Activity implements ActionHandler {
 
     private View canvasView;
     private ImageView toolView;
+    private View toolEraser;
     private View toolPencil;
     private View toolSticker;
     private CanvasFragment canvas;
@@ -26,8 +27,9 @@ public class MainActivity extends Activity implements ActionHandler {
         }
         switch(id) {
             case R.id.action_paint_end:       stopPaint();    return true;
-            case R.id.action_paint_sticker:
-            case R.id.action_paint_pencil:    startPaint(id); return true;
+            case R.id.action_paint_eraser:
+            case R.id.action_paint_pencil:
+            case R.id.action_paint_sticker:   startPaint(id); return true;
             case R.id.action_select_bg:       onBackgroundSelectorClicked((View) data); return true;
             case R.id.action_select_stickers: onStickerSelectorClicked((View) data);    return true;
         }
@@ -47,6 +49,7 @@ public class MainActivity extends Activity implements ActionHandler {
 
         canvasView = findViewById(R.id.canvas_view);
         toolView = (ImageView) findViewById(R.id.tool_view);
+        toolEraser = findViewById(R.id.action_paint_eraser);
         toolPencil = findViewById(R.id.action_paint_pencil);
         toolSticker = findViewById(R.id.action_select_stickers);
 
@@ -97,14 +100,13 @@ public class MainActivity extends Activity implements ActionHandler {
 
     private void startPaint(int id) {
         switch(id) {
-            case R.id.action_paint_sticker:
-                if(toolSticker.isSelected()) {
+            case R.id.action_paint_eraser:
+                if(toolEraser.isSelected()) {
                     stopPaint();
                 } else {
                     stopPaint();
-                    toolView.setVisibility(View.VISIBLE);
-                    toolView.setOnTouchListener(new StickerGestureDetector(this, canvasView, toolView));
-                    toolSticker.setSelected(true);
+                    canvasView.setOnTouchListener(new PencilGestureDetector(this, canvasView, true));
+                    toolEraser.setSelected(true);
                 }
                 break;
             case R.id.action_paint_pencil:
@@ -116,6 +118,16 @@ public class MainActivity extends Activity implements ActionHandler {
                     toolPencil.setSelected(true);
                 }
                 break;
+            case R.id.action_paint_sticker:
+                if(toolSticker.isSelected()) {
+                    stopPaint();
+                } else {
+                    stopPaint();
+                    toolView.setVisibility(View.VISIBLE);
+                    toolView.setOnTouchListener(new StickerGestureDetector(this, canvasView, toolView));
+                    toolSticker.setSelected(true);
+                }
+                break;
         }
     }
 
@@ -125,6 +137,7 @@ public class MainActivity extends Activity implements ActionHandler {
         toolView.setVisibility(View.GONE);
         toolView.setOnTouchListener(null);
         canvasView.setOnTouchListener(null);
+        toolEraser.setSelected(false);
         toolPencil.setSelected(false);
         toolSticker.setSelected(false);
     }

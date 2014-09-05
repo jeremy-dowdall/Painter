@@ -93,15 +93,15 @@
             />
 
         <ImageButton
-            android:id="@+id/action_paint_crayon"
-            style="@style/ToolButton.Tool"
-            android:src="@drawable/ic_tb_crayon"
-            />
-
-        <ImageButton
             android:id="@+id/action_paint_pencil"
             style="@style/ToolButton.Tool"
             android:src="@drawable/ic_tb_pencil"
+            />
+
+        <ImageButton
+            android:id="@+id/action_paint_eraser"
+            style="@style/ToolButton.Tool"
+            android:src="@drawable/ic_tb_eraser"
             />
     </LinearLayout>
 

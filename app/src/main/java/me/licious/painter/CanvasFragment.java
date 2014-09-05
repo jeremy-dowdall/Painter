@@ -1,7 +1,11 @@
 package me.licious.painter;
 
 import android.app.Fragment;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -14,7 +18,7 @@ public class CanvasFragment extends Fragment implements ActionHandler {
 
     private Painting painting;
     private ImageView canvasView;
-    private int backgroundColor;
+    private int backgroundId;
 
     @Override
     public boolean onAction(int id, Object data) {
@@ -26,7 +30,8 @@ public class CanvasFragment extends Fragment implements ActionHandler {
             case R.id.action_set_bg_pink:
             case R.id.action_set_bg_blue:
             case R.id.action_set_bg_green:
-            case R.id.action_set_bg_purple:  setBackground(id); return true;
+            case R.id.action_set_bg_purple:
+            case R.id.action_set_bg_pattern: setBackground(id); return true;
         }
         return false;
     }
@@ -38,9 +43,9 @@ public class CanvasFragment extends Fragment implements ActionHandler {
         setRetainInstance(true);
 
         if(savedInstanceState == null) {
-            backgroundColor = Color.WHITE;
+            backgroundId = R.id.action_set_bg_white;
         } else {
-            backgroundColor = savedInstanceState.getInt(BACKGROUND_COLOR, Color.WHITE);
+            backgroundId = savedInstanceState.getInt(BACKGROUND_COLOR, R.id.action_set_bg_white);
         }
     }
 
@@ -51,7 +56,7 @@ public class CanvasFragment extends Fragment implements ActionHandler {
             painting = new Painting(getActivity());
         }
         canvasView = (ImageView) getActivity().findViewById(R.id.canvas_view);
-        canvasView.setBackgroundColor(backgroundColor);
+        setBackground(backgroundId);
         painting.attach(canvasView);
     }
 
@@ -83,8 +88,15 @@ public class CanvasFragment extends Fragment implements ActionHandler {
     }
 
     private void setBackground(int id) {
-        backgroundColor = getColor(id);
-        canvasView.setBackgroundColor(backgroundColor);
+        backgroundId = id;
+        if(backgroundId == R.id.action_set_bg_pattern) {
+            Resources res = getActivity().getResources();
+            BitmapDrawable bmd = new BitmapDrawable(res, BitmapFactory.decodeResource(res, R.drawable.pattern));
+            bmd.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+            canvasView.setBackground(bmd);
+        } else {
+            canvasView.setBackgroundColor(getColor(id));
+        }
     }
 
     private void redo() {

@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,9 +23,11 @@ public class Painting implements View.OnLayoutChangeListener {
 
     private final List<Command> commands;
 
-    private final Paint stickerPaint;
-    private final Paint pointPaint;
-    private final Paint linePaint;
+    private final Paint drawBitmapPaint;
+    private final Paint drawPointPaint;
+    private final Paint drawLinePaint;
+    private final Paint erasePointPaint;
+    private final Paint eraseLinePaint;
 
     private int pos;
     private Bitmap bm;
@@ -33,12 +37,16 @@ public class Painting implements View.OnLayoutChangeListener {
         commands = new ArrayList<Command>();
 
         Resources res = context.getResources();
-        stickerPaint = new Paint();
-        pointPaint = new Paint();
-        pointPaint.setStrokeCap(Paint.Cap.ROUND);
-        pointPaint.setStrokeWidth(res.getDimension(R.dimen.point_size));
-        linePaint = new Paint();
-        linePaint.setStrokeWidth(res.getDimension(R.dimen.line_width));
+        drawBitmapPaint = new Paint();
+        drawPointPaint = new Paint();
+        drawPointPaint.setStrokeCap(Paint.Cap.ROUND);
+        drawPointPaint.setStrokeWidth(res.getDimension(R.dimen.point_size));
+        drawLinePaint = new Paint();
+        drawLinePaint.setStrokeWidth(res.getDimension(R.dimen.line_width));
+        erasePointPaint = new Paint(drawPointPaint);
+        erasePointPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        eraseLinePaint = new Paint(drawLinePaint);
+        eraseLinePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
     @Override
@@ -74,15 +82,15 @@ public class Painting implements View.OnLayoutChangeListener {
                 Sticker sticker = (Sticker) cmd;
                 Resources resources = view.getContext().getResources();
                 Bitmap b = BitmapFactory.decodeResource(resources, sticker.resId);
-                canvas.drawBitmap(b, sticker.matrix, stickerPaint);
+                canvas.drawBitmap(b, sticker.matrix, drawBitmapPaint);
             }
             if(cmd instanceof Point) {
                 Point point = (Point) cmd;
-                canvas.drawPoint(point.x, point.y, pointPaint);
+                canvas.drawPoint(point.x, point.y, point.erase ? erasePointPaint : drawPointPaint);
             }
             if(cmd instanceof Line) {
                 Line line = (Line) cmd;
-                canvas.drawLine(line.x1, line.y1, line.x2, line.y2, linePaint);
+                canvas.drawLine(line.x1, line.y1, line.x2, line.y2, line.erase ? eraseLinePaint : drawLinePaint);
             }
         }
         view.postInvalidate();
@@ -133,9 +141,11 @@ public class Painting implements View.OnLayoutChangeListener {
         }
         public static class Point implements Command {
             public float x, y;
+            public boolean erase;
         }
         public static class Line implements Command {
             public float x1, y1, x2, y2;
+            public boolean erase;
         }
     }
 
